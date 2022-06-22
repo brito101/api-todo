@@ -48,11 +48,21 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = User::where('email', $request->email)->first();
-            $text = time() . rand(0, 9999);
-            $token = $user->createToken($text);
-            $array['token'] = $token->plainTextToken;
+        /** Sactum */
+        // if (Auth::attempt($credentials)) {
+        //     $user = User::where('email', $request->email)->first();
+        //     $text = time() . rand(0, 9999);
+        //     $token = $user->createToken($text);
+        //     $array['token'] = $token->plainTextToken;
+        // } else {
+        //     $array['error'] = 'Credenciais inválidas';
+        // }
+
+        /** JWT */
+        $token = Auth::attempt($credentials);
+
+        if ($token) {
+            $array['token'] = $token;
         } else {
             $array['error'] = 'Credenciais inválidas';
         }
@@ -64,9 +74,12 @@ class AuthController extends Controller
     {
         $array = ['error' => ''];
 
-        $user = $request->user();
+        /** Sanctum */
+        // $user = $request->user();
+        // $user->tokens()->delete();
 
-        $user->tokens()->delete();
+        /** JWT */
+        Auth::logout();
 
         return $array;
     }

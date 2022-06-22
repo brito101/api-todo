@@ -14,9 +14,14 @@ Route::get('/unauthenticated', function () {
 })->name('login');
 
 Route::post('user', [AuthController::class, 'create']);
+
 Route::post('auth', [AuthController::class, 'auth']);
 
-Route::middleware('auth:sanctum')->group(function () {
+/** Sactum */
+// Route::middleware('auth:sanctum')->group(function () {
+
+/** JWT */
+Route::middleware('auth:api')->group(function () {
     Route::apiResource('todo', ApiController::class);
     Route::get('logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
